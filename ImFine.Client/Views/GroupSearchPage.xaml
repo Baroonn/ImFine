@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             BackgroundColor="White"
+             x:Class="ImFine.Client.Views.GroupSearchPage"
+             xmlns:controls="clr-namespace:ImFine.Client"
+             xmlns:viewmodel ="clr-namespace:ImFine.Client.ViewModels"
+             xmlns:model ="clr-namespace:ImFine.Client.DTOs"
+             x:DataType="viewmodel:GroupSearchViewModel"
+             Title="Search for group">
+
+    <ContentPage.BindingContext>
+        <viewmodel:GroupSearchViewModel></viewmodel:GroupSearchViewModel>
+    </ContentPage.BindingContext>
+
+    <!--<Shell.SearchHandler>
+        <controls:GroupSearchHandler Placeholder="Enter search term"
+                                     ShowsResults="true"
+                                     DisplayMemberName="name">
+
+        </controls:GroupSearchHandler>
+    </Shell.SearchHandler>-->
+    <StackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Border Margin="5,5,0,5" 
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    Padding="10,0,0,0">
+                <Entry Placeholder="Enter search term" Text="{Binding SearchTerm, Mode=TwoWay}"/>
+            </Border>
+            <Button Grid.Column="1" Command="{Binding SearchCommand}" HorizontalOptions="Center" VerticalOptions="Center" Text="Search"/>
+        </Grid>
+        <!--<BoxView IsVisible="True" BackgroundColor="Black" HeightRequest="1"></BoxView>-->
+        <ListView ItemsSource="{Binding Groups}"
+                  VerticalOptions="FillAndExpand"
+                  HasUnevenRows="False"
+                  RowHeight="70"
+                  IsPullToRefreshEnabled="false"
+                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                  SelectionMode="None"
+                  x:Name="mListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid HeightRequest="45" x:DataType="model:GroupSearchDto" Padding="10,2">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Margin="0" FontSize="18" FontAttributes="Bold" Text="{Binding name}" TextColor="Black"/>
+                            
+                            <!--<Label Grid.Column="1" Text="{Binding status}"/>-->
+                            <!--<Switch OnColor="LightGreen" ThumbColor="Grey" IsToggled="{Binding IsToggled, Mode=TwoWay}" ></Switch>-->
+                            <Label Margin="0" FontAttributes="Italic" Grid.Row="1" Text="{Binding owner}" TextColor="Black"></Label>
+                            <Button BackgroundColor="Transparent" TextColor="Blue" Grid.Column="1" Grid.Row="1" Text="{Binding ActionToTake, Mode=TwoWay}" Padding="0" Command="{Binding Path=BindingContext.JoinCommand,Source={Reference mListView}}" CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </ViewCell>
+
+                    <!--<BoxView IsVisible="True" BackgroundColor="Black" HeightRequest="1"></BoxView>-->
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+            
+        </ListView>
+    </StackLayout>
+</ContentPage>

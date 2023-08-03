@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:ImFine.Client.Models"
+             xmlns:viewmodel ="clr-namespace:ImFine.Client.ViewModels"
+             xmlns:controls="clr-namespace:ImFine.Client"
+             BackgroundColor="White"
+             x:DataType="viewmodel:GroupListViewModel"
+             x:Class="ImFine.Client.Views.GroupListPage"
+             Title="Groups">
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Search" Command="{Binding FindGroupCommand}"/>
+        <ToolbarItem Text="Add" Command="{Binding AddGroupCommand}"/>
+    </ContentPage.ToolbarItems>
+    
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False"/>
+    </Shell.BackButtonBehavior>
+    <!--<RefreshView IsRefreshing="{Binding IsBusy}"
+                 Command="{Binding GetGroupsCommand}">-->
+        <ListView ItemsSource="{Binding Groups}" 
+                  VerticalOptions="FillAndExpand"
+                  HasUnevenRows="False"
+                  RowHeight="70"
+                  RefreshCommand="{Binding RefreshGroupsCommand}"
+                  IsPullToRefreshEnabled="true"
+                  IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                  SelectionMode="None"
+                  x:Name="mListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                <ViewCell>
+                    <Grid x:DataType="model:Group" Padding="10,2">
+                        <Grid.GestureRecognizers>
+                            <!--<TapGestureRecognizer Tapped="OnItemTapped" NumberOfTapsRequired="1"/>-->
+                            <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToGroupCommand, Source={Reference mListView}}" CommandParameter="{Binding .}"/>
+                        </Grid.GestureRecognizers>
+                        <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                        <Label Margin="0" FontSize="18" FontAttributes="Bold" Text="{Binding name}" TextColor="Black"/>
+                        <Border Padding="0,0"
+                                HeightRequest="25"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 5,5,5,5"
+                                BackgroundColor="Transparent"
+                                Stroke="{Binding BorderColor}"
+                                Grid.Column="1" Grid.Row="1" >
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding status}"/>
+                        </Border>
+                        <!--<Label Grid.Column="1" Text="{Binding status}"/>-->
+                            <!--<Switch OnColor="LightGreen" ThumbColor="Grey" IsToggled="{Binding IsToggled, Mode=TwoWay}" ></Switch>-->
+                        <Label Margin="0" FontAttributes="Italic"  Grid.Row="1" Text="{Binding Info}" TextColor="Black"></Label>
+                        </Grid>
+                        <!--<BoxView IsVisible="True" BackgroundColor="Black" HeightRequest="1"></BoxView>-->
+                    </ViewCell>
+                    
+                    <!--<Frame CornerRadius="10"
+                       Padding="10"
+                       Margin="10"
+                       HasShadow="True"
+                       BackgroundColor="Black"
+                       BorderColor="Grey">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label FontSize="25" Text="{Binding name}" TextColor="White"/>
+                            <Switch IsToggled="{Binding IsToggled, Mode=TwoWay}" Grid.Column="1"></Switch>
+                            <Label Grid.Row="1" Text="{Binding owner}" TextColor="White"></Label>
+                        </Grid>
+                        --><!--<StackLayout  HorizontalOptions="Fill">
+                        <StackLayout HorizontalOptions="Fill">
+                            <Label VerticalOptions="Center" HorizontalOptions="Start" Text="{Binding name}" TextColor="White"/>
+                            <Switch HorizontalOptions="End"></Switch>
+                        </StackLayout>
+                        <HorizontalStackLayout>
+                            <Label Text="{Binding owner}" TextColor="White"></Label>
+                        </HorizontalStackLayout>
+                    </StackLayout>--><!--
+                    </Frame>-->
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    <!--</RefreshView>-->
+    
+</ContentPage>

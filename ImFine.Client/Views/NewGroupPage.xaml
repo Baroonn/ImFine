@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel ="clr-namespace:ImFine.Client.ViewModels"
+             BackgroundColor="White"
+             x:Class="ImFine.Client.Views.NewGroupPage"
+             Shell.PresentationMode="ModalAnimated"
+             x:DataType="viewmodel:NewGroupViewModel"
+             Padding="10"
+             Title="Add Group">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Group Name" FontSize="Medium" />
+            <Border Padding="10,2"
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    Margin="0,0,0,20">
+                <Entry Text="{Binding Name, Mode=TwoWay}" FontSize="Medium" />
+            </Border>
+            
+            <Label Text="Interval" FontSize="Medium" />
+            <Border Padding="10,2"
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    Margin="0,0,0,20">
+                <Editor Text="{Binding IntervalInMinutes, Mode=TwoWay}" AutoSize="TextChanges" FontSize="Medium" Margin="0" />
+            </Border>
+            <StackLayout Orientation="Horizontal" Margin="0,20">
+                <Button Text="Cancel" Command="{Binding CancelCommand}" HorizontalOptions="FillAndExpand" Margin="5"></Button>
+                <Button Text="Save" Command="{Binding SaveCommand}" HorizontalOptions="FillAndExpand" Margin="5"></Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+    
+</ContentPage>

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "191110501130",
+    "project_id": "imfine-cf871",
+    "storage_bucket": "imfine-cf871.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191110501130:android:96023691f9e42d30e320f3",
+        "android_client_info": {
+          "package_name": "com.companyname.imfine.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "191110501130-8o2epu07sg48jb5etg26uieq6gh1c4po.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAW3hSPK10s0-7v5ABwNOi9WKl4NyjtWmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "191110501130-8o2epu07sg48jb5etg26uieq6gh1c4po.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
