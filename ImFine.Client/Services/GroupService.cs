@@ -40,6 +40,25 @@ namespace ImFine.Client.Services
             return groups;
         }
 
+        public async Task<bool> DeleteGroup(string name)
+        {
+            Group group = null;
+            httpClient.SetBearerToken(await SecureStorage.Default.GetAsync("identity"));
+            var response = await httpClient.DeleteAsync($"{baseUrl}/api/groups/{name}");
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return false;
+            }
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public async Task<Group> GetGroup(string name)
         {
             Group group = null;

@@ -1,4 +1,6 @@
-﻿using ImFine.Client.Platforms.Android;
+﻿#if ANDROID 
+using ImFine.Client.Platforms.Android;
+#endif
 using ImFine.Client.Services;
 using Plugin.LocalNotification;
 using Plugin.LocalNotification.EventArgs;
@@ -11,7 +13,9 @@ namespace ImFine.Client.ViewModels
     {
         private CancellationTokenSource _cancelTokenSource;
         private bool _isCheckingLocation;
+#if ANDROID
         private readonly Android.Content.Intent intent = new Android.Content.Intent(Android.App.Application.Context, typeof(ForegroundServiceDemo));
+#endif
         private static Dictionary<string, System.Timers.Timer> timers = new();
 
         public BaseViewModel()
@@ -22,7 +26,7 @@ namespace ImFine.Client.ViewModels
 
         private async void Current_NotificationActionTapped(NotificationActionEventArgs e)
         {
-
+            LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
             switch (e.ActionId)
             {
                 case 100:
@@ -33,7 +37,7 @@ namespace ImFine.Client.ViewModels
                     await HubService.UpdateGroupStateAsync(e.Request.Title, "unsafe", await GetCurrentLocation());
                     break;
             }
-            LocalNotificationCenter.Current.Cancel(e.Request.NotificationId);
+
         }
         public void AddToTimers(string groupName, int intervalInMinutes)
         {
@@ -77,7 +81,9 @@ namespace ImFine.Client.ViewModels
             }
         }
         public Dictionary<string, System.Timers.Timer> Timers => timers;
+#if ANDROID
         public Android.Content.Intent Intent => intent;
+#endif
         public static IGroupService GroupService => ServiceHelper.GetService<IGroupService>();
         public static IHubService HubService => ServiceHelper.GetService<IHubService>();
         bool isBusy = false;
@@ -142,14 +148,44 @@ namespace ImFine.Client.ViewModels
             return "None";
         }
 
+        public async Task<PermissionStatus> CheckAndRequestLocationPermission()
+        {
+            PermissionStatus status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+            if (status == PermissionStatus.Granted)
+                return status;
+
+            if (status == PermissionStatus.Denied && DeviceInfo.Platform == DevicePlatform.iOS)
+            {
+                // Prompt the user to turn on in settings
+                // On iOS once a permission has been denied it may not be requested again from the application
+                return status;
+            }
+
+            //if (Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>())
+            //{
+            //    // Prompt the user with additional information as to why the permission is needed
+            //}
+            var accept = await Shell.Current.DisplayAlert("Info: ", "This app collects location data to enable you share you location with users in your groups even when the app is closed.", "OK", "Deny");
+
+            if (!accept) return status;
+            status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+
+            return status;
+        }
+
         public async Task<string> GetCurrentLocation()
         {
             Location location;
             try
             {
                 _isCheckingLocation = true;
-
-                GeolocationRequest request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                var status = await CheckAndRequestLocationPermission();
+                if (status != PermissionStatus.Granted)
+                {
+                    return "None";
+                }
+                GeolocationRequest request = new(GeolocationAccuracy.High, TimeSpan.FromSeconds(10));
 
                 _cancelTokenSource = new CancellationTokenSource();
 
@@ -158,7 +194,7 @@ namespace ImFine.Client.ViewModels
                 if (location != null)
                 {
                     Console.WriteLine($"Latitude: {location.Latitude}, Longitude: {location.Longitude}, Altitude: {location.Altitude}");
-                    return $"Latitude: {location.Latitude}, Longitude: {location.Longitude}";
+                    return $"{location.Latitude}, {location.Longitude}";
                 }
 
             }

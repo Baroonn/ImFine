@@ -19,22 +19,29 @@ public partial class GroupListPage : ContentPage
         return true;
     }
 
-    public async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
-    {
-        var group = args.SelectedItem as Group;
-        await Shell.Current.GoToAsync($"{nameof(GroupMemberPage)}?{nameof(GroupMemberViewModel.GroupName)}={group.name}");
-        //((ListView)sender).SelectedItem = null;
-    }
+    //public async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
+    //{
+    //    var group = args.SelectedItem as Group;
+    //    await Shell.Current.GoToAsync($"{nameof(GroupMemberPage)}?{nameof(GroupMemberViewModel.GroupName)}={group.name}");
+    //    //((ListView)sender).SelectedItem = null;
+    //}
 
-    public void OnItemTapped(object sender, EventArgs args)
-    {
-        var group = sender as Group;
-        Shell.Current.GoToAsync($"{nameof(GroupOwnerPage)}?{nameof(GroupOwnerViewModel.GroupName)}={group.name}");
-    }
+    //public async void OnItemTapped(object sender, EventArgs args)
+    //{
+    //    var group = sender as Group;
+    //    await Shell.Current.GoToAsync($"{nameof(GroupOwnerPage)}?{nameof(GroupOwnerViewModel.GroupName)}={group.name}");
+    //}
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        //_viewModel.RefreshGroupsCommand.Execute(this);
         base.OnNavigatedTo(args);
+        _viewModel.RefreshGroupsCommand.Execute(this);
+    }
+
+    public async void OnItemDeleted(object sender, EventArgs args)
+    {
+        MenuItem menuItem = sender as MenuItem;
+        var contextItem = (Group)menuItem.BindingContext;
+        _viewModel.DeleteGroupAsync(contextItem.name);
     }
 }

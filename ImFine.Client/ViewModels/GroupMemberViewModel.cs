@@ -10,7 +10,14 @@
         private string imageSource = "stop.svg";
         private string updatedAt;
         private string lastSeen = default;
+        private string currentUser = default;
 
+        public Command ViewMapCommand { get; }
+
+        public GroupMemberViewModel()
+        {
+            ViewMapCommand = new Command(async () => await ViewOnMap());
+        }
         public string LastSeen
         {
             get => $"Last Seen: {lastSeen}";
@@ -46,6 +53,18 @@
             }
         }
 
+        public string CurrentUser
+        {
+            get
+            {
+                return currentUser;
+            }
+            set
+            {
+                SetProperty(ref currentUser, value);
+            }
+        }
+
         public string Name
         {
             get => name;
@@ -63,7 +82,23 @@
             ImageSource = group.status;
             UpdatedAt = group.updatedAt.ToLocalTime().ToString();
             LastSeen = group.lastSeen;
+            currentUser = group.currentUser;
             IsBusy = false;
+        }
+
+        public async Task ViewOnMap()
+        {
+            try
+            {
+                string[] lastSeen = this.lastSeen.Split(",");
+                var location = new Location(double.Parse(lastSeen[0]), double.Parse(lastSeen[1]));
+                var options = new MapLaunchOptions { Name = $"{this.currentUser}'s last seen" };
+                await Map.Default.OpenAsync(location, options);
+            }
+            catch (Exception _)
+            {
+                await Shell.Current.DisplayAlert("Error: ", "Unable to load map", "OK");
+            }
         }
     }
 }

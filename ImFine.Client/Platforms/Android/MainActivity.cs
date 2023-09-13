@@ -1,9 +1,14 @@
-﻿using Android.App;
+﻿using Android;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Plugin.Firebase.CloudMessaging;
 
+[assembly: UsesPermission(Name = Manifest.Permission.AccessFineLocation)]
+[assembly: UsesPermission(Name = Manifest.Permission.AccessCoarseLocation)]
+[assembly: UsesPermission(Name = Manifest.Permission.Internet)]
+[assembly: UsesPermission(Name = Manifest.Permission.ForegroundService)]
 namespace ImFine.Client
 {
     [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]

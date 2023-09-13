@@ -54,8 +54,15 @@ namespace ImFine.Client.Services
 
         public async Task UpdateGroupStateAsync(string groupName, string state, string lastSeen)
         {
-            await StartConnectionAsync();
-            await hubConnection.InvokeCoreAsync("UpdateGroupState", args: new[] { groupName, state, lastSeen, "" });
+            try
+            {
+                await StartConnectionAsync();
+                await hubConnection.InvokeCoreAsync("UpdateGroupState", args: new[] { groupName, state, lastSeen, "" });
+            }
+            catch (Exception _)
+            {
+                await Shell.Current.DisplayAlert("Error: ", "Unable to make changes to group. Confirm you have permission.", "OK");
+            }
         }
 
         public async Task AddUserToGroupAsync(string groupName, bool notify)

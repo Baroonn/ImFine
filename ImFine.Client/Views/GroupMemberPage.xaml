@@ -12,7 +12,9 @@
             <Image WidthRequest="150" Source="{Binding ImageSource}" HorizontalOptions="Center" VerticalOptions="CenterAndExpand"></Image>
             <Label HeightRequest="50" HorizontalOptions="Center" Text="{Binding UpdatedAt}"/>
             <Label HeightRequest="50" HorizontalOptions="Center" Text="{Binding LastSeen}"/>
+            <Button Command="{Binding ViewMapCommand}" BackgroundColor="DarkGreen" Text="Go to Map" HorizontalOptions="FillAndExpand" Margin="5,5,10,5"></Button>
         </StackLayout>
+        
     </RefreshView>
 
 </ContentPage>

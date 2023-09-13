@@ -3,9 +3,11 @@ using ImFine.Server.Contracts;
 using ImFine.Server.Extensions;
 using ImFine.Server.Hubs;
 using ImFine.Server.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,25 +20,38 @@ builder.Host.ConfigureLogging(logging =>
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<ICosmosService, CosmosService>();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR().AddAzureSignalR();
 builder.Services.ConfigureSwagger();
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
 
-// 1. Add Authentication Services
+// 1. Add Authentication Services\
+
 builder.Services.AddAuthentication(options =>
 {
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddCookie()
+    .AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = builder.Configuration["Google:ClientId"];
+    googleOptions.ClientSecret = builder.Configuration["Google:ClientSecret"];
+    googleOptions.SaveTokens = true;
+    //googleOptions.SignInScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ExternalScheme;
 }).AddJwtBearer(options =>
 {
-    options.Authority = builder.Configuration["Auth0:Domain"];
+    //options.Authority = builder.Configuration["Auth0:Domain"];
     options.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateIssuer = false,
         ValidateAudience = false,
-        ValidateLifetime = true
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ACDt1vR3lXToPQ1g3MyN"))
     };
 
     options.RequireHttpsMetadata = false;

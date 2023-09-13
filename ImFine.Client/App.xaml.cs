@@ -1,4 +1,6 @@
-﻿using AndroidX.AppCompat.App;
+﻿#if ANDROID
+using AndroidX.AppCompat.App;
+#endif
 using ImFine.Client.Auth0;
 using ImFine.Client.Views;
 using System.Diagnostics;
@@ -11,7 +13,9 @@ namespace ImFine.Client
         {
             InitializeComponent();
             UserAppTheme = AppTheme.Light;
+#if AND
             AppCompatDelegate.DefaultNightMode = AppCompatDelegate.ModeNightNo;
+#endif
             Routing.RegisterRoute(nameof(GroupOwnerPage), typeof(GroupOwnerPage));
             Routing.RegisterRoute(nameof(GroupMemberPage), typeof(GroupMemberPage));
             Routing.RegisterRoute(nameof(NewGroupPage), typeof(NewGroupPage));

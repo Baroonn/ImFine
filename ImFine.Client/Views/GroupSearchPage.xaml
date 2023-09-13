@@ -28,8 +28,9 @@
             </Grid.ColumnDefinitions>
             <Border Margin="5,5,0,5" 
                     StrokeShape="RoundRectangle 10,10,10,10"
-                    Padding="10,0,0,0">
-                <Entry Placeholder="Enter search term" Text="{Binding SearchTerm, Mode=TwoWay}"/>
+                    Padding="0,0,0,0"
+                    BackgroundColor="White">
+                <Entry Margin="10,0,0,0" Placeholder="Enter search term" BackgroundColor="White" Text="{Binding SearchTerm, Mode=TwoWay}"/>
             </Border>
             <Button Grid.Column="1" Command="{Binding SearchCommand}" HorizontalOptions="Center" VerticalOptions="Center" Text="Search"/>
         </Grid>

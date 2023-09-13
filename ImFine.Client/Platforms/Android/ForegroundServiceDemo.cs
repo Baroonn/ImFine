@@ -24,9 +24,9 @@ namespace ImFine.Client.Platforms.Android
             var notification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
             notification.SetAutoCancel(false);
             notification.SetOngoing(true);
-            notification.SetSmallIcon(Resource.Mipmap.appicon);
-            notification.SetContentTitle("ForegroundService");
-            notification.SetContentText("Foreground Service is running");
+            notification.SetSmallIcon(Resource.Mipmap.appicon4);
+            notification.SetContentTitle("ImFine running");
+            notification.SetContentText("One or more groups are currently active.");
             StartForeground(NOTIFICATION_ID, notification.Build());
         }
 

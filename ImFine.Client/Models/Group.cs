@@ -6,6 +6,7 @@
         public string name { get; set; }
         public int intervalInMinutes { get; set; }
         public string status { get; set; }
+
         public string owner { get; set; }
         public string members { get; set; }
         public string currentUser { get; set; }
@@ -18,9 +19,30 @@
             get { return status != "stop" ? Colors.DarkGreen : Colors.DarkRed; }
         }
 
+        public string shownstatus
+        {
+            get { return CleanStatus(status); }
+        }
+
         public string Info
         {
             get { return $"Created by: {owner} \nCurrent User: {(string.IsNullOrEmpty(currentUser) ? "None" : currentUser)}"; }
+        }
+
+        private string CleanStatus(string status)
+        {
+            if (status == "stop")
+            {
+                return "stopped";
+            }
+            else if (status == "start")
+            {
+                return "active";
+            }
+            else
+            {
+                return status;
+            }
         }
 
         //public async void OnItemTapped(object sender, TappedEventArgs args)

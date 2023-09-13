@@ -16,6 +16,7 @@
 
         public Command SafeCommand { get; }
         public Command UnsafeCommand { get; }
+        public Command DeleteCommand { get; }
         public string UpdatedAt
         {
             get => $"Last Modified: {updatedAt}";
@@ -39,7 +40,7 @@
         {
             SafeCommand = new Command(OnSafe, ValidateAction);
             UnsafeCommand = new Command(OnNotSafe, ValidateAction);
-
+            DeleteCommand = new Command(async () => await DeleteGroupAsync(name));
             this.PropertyChanged +=
                 (_, args) =>
                 {
@@ -53,7 +54,6 @@
             this.intervalInMinutes = default;
             this.status = default;
             this.isToggled = null;
-            //ImageSource = "stopped.svg";
         }
         public string GroupName
         {
@@ -135,11 +135,31 @@
             IsBusy = false;
         }
 
+        public async Task DeleteGroupAsync(string name)
+        {
+            IsBusy = true;
+            var success = await GroupService.DeleteGroup(name);
+            if (!success)
+            {
+                await Shell.Current.DisplayAlert("Error: ", "Unable to delete group. Confirm you have permission.", "OK");
+            }
+            else
+            {
+                await Shell.Current.Navigation.PopAsync();
+            }
+            IsBusy = false;
+        }
+
         public async void UpdateGroupState()
         {
             IsBusy = true;
-            string lastSeen = await GetCurrentLocation();
-            await HubService.UpdateGroupStateAsync(groupName, status, lastSeen);
+            string clastSeen = await GetCurrentLocation();
+            if (clastSeen == "None")
+            {
+                IsBusy = false;
+                return;
+            }
+            await HubService.UpdateGroupStateAsync(groupName, status, clastSeen);
             if (status == "start")
             {
                 AddToTimers(groupName, intervalInMinutes);
@@ -148,26 +168,24 @@
             {
                 RemoveFromTimers(groupName);
             }
+
+#if ANDROID
             if (status != "stop")
             {
-#if ANDROID
 
                 Android.App.Application.Context.StartForegroundService(Intent);
-#endif
             }
             else
             {
                 Android.App.Application.Context.StopService(Intent);
             }
+#endif
             UpdatedAt = DateTime.Now.ToString();
             ImageSource = status;
-            LastSeen = lastSeen;
+            LastSeen = clastSeen;
             SafeCommand.ChangeCanExecute(); UnsafeCommand.ChangeCanExecute();
             IsBusy = false;
         }
-
-
-
 
         private bool ValidateAction()
         {
@@ -177,11 +195,16 @@
         public async void OnSafe()
         {
             IsBusy = true;
-            string lastSeen = await GetCurrentLocation();
-            await HubService.UpdateGroupStateAsync(groupName, "start", lastSeen);
+            string clastSeen = await GetCurrentLocation();
+            if (clastSeen == "None")
+            {
+                IsBusy = false;
+                return;
+            }
+            await HubService.UpdateGroupStateAsync(groupName, "start", clastSeen);
             UpdatedAt = DateTime.Now.ToString();
             ImageSource = "start";
-            LastSeen = lastSeen;
+            LastSeen = clastSeen;
             SafeCommand.ChangeCanExecute(); UnsafeCommand.ChangeCanExecute();
             IsBusy = false;
         }
@@ -189,11 +212,16 @@
         public async void OnNotSafe()
         {
             IsBusy = true;
-            string lastSeen = await GetCurrentLocation();
-            await HubService.UpdateGroupStateAsync(groupName, "unsafe", lastSeen);
+            string clastSeen = await GetCurrentLocation();
+            if (clastSeen == "None")
+            {
+                IsBusy = false;
+                return;
+            }
+            await HubService.UpdateGroupStateAsync(groupName, "unsafe", clastSeen);
             UpdatedAt = DateTime.Now.ToString();
             ImageSource = "unsafe";
-            LastSeen = lastSeen;
+            LastSeen = clastSeen;
             SafeCommand.ChangeCanExecute(); UnsafeCommand.ChangeCanExecute();
             IsBusy = false;
         }

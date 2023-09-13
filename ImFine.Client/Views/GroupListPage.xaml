@@ -10,8 +10,8 @@
              Title="Groups">
     
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Search" Command="{Binding FindGroupCommand}"/>
-        <ToolbarItem Text="Add" Command="{Binding AddGroupCommand}"/>
+        <ToolbarItem Text="Join" Command="{Binding FindGroupCommand}"/>
+        <ToolbarItem Text="Create" Command="{Binding AddGroupCommand}"/>
     </ContentPage.ToolbarItems>
     
     <Shell.BackButtonBehavior>
@@ -21,19 +21,17 @@
                  Command="{Binding GetGroupsCommand}">-->
         <ListView ItemsSource="{Binding Groups}" 
                   VerticalOptions="FillAndExpand"
-                  HasUnevenRows="False"
-                  RowHeight="70"
+                  HasUnevenRows="True"
                   RefreshCommand="{Binding RefreshGroupsCommand}"
-                  IsPullToRefreshEnabled="true"
+                  IsPullToRefreshEnabled="True"
                   IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                   SelectionMode="None"
                   x:Name="mListView">
             <ListView.ItemTemplate>
                 <DataTemplate>
                 <ViewCell>
-                    <Grid x:DataType="model:Group" Padding="10,2">
+                    <Grid x:DataType="model:Group" Padding="10,2" Margin="5,5,5,5">
                         <Grid.GestureRecognizers>
-                            <!--<TapGestureRecognizer Tapped="OnItemTapped" NumberOfTapsRequired="1"/>-->
                             <TapGestureRecognizer Command="{Binding Path=BindingContext.GoToGroupCommand, Source={Reference mListView}}" CommandParameter="{Binding .}"/>
                         </Grid.GestureRecognizers>
                         <Grid.RowDefinitions>
@@ -44,19 +42,21 @@
                                 <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                        <Label Margin="0" FontSize="18" FontAttributes="Bold" Text="{Binding name}" TextColor="Black"/>
-                        <Border Padding="0,0"
+                        <Label Margin="0,0,0,5" FontSize="20" FontAttributes="Bold" Text="{Binding name}" TextColor="Black"/>
+                        <Border
+                                Padding="3"
+                                WidthRequest="75"
                                 HeightRequest="25"
                                 StrokeThickness="1"
                                 StrokeShape="RoundRectangle 5,5,5,5"
                                 BackgroundColor="Transparent"
                                 Stroke="{Binding BorderColor}"
                                 Grid.Column="1" Grid.Row="1" >
-                            <Label HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding status}"/>
+                            <Label HorizontalOptions="Center" VerticalOptions="Center" Text="{Binding shownstatus}"/>
                         </Border>
                         <!--<Label Grid.Column="1" Text="{Binding status}"/>-->
                             <!--<Switch OnColor="LightGreen" ThumbColor="Grey" IsToggled="{Binding IsToggled, Mode=TwoWay}" ></Switch>-->
-                        <Label Margin="0" FontAttributes="Italic"  Grid.Row="1" Text="{Binding Info}" TextColor="Black"></Label>
+                        <Label FontAttributes="Italic"  Grid.Row="1" Text="{Binding Info}" TextColor="Black"></Label>
                         </Grid>
                         <!--<BoxView IsVisible="True" BackgroundColor="Black" HeightRequest="1"></BoxView>-->
                     </ViewCell>
@@ -80,7 +80,8 @@
                             <Switch IsToggled="{Binding IsToggled, Mode=TwoWay}" Grid.Column="1"></Switch>
                             <Label Grid.Row="1" Text="{Binding owner}" TextColor="White"></Label>
                         </Grid>
-                        --><!--<StackLayout  HorizontalOptions="Fill">
+                        -->
+                    <!--<StackLayout  HorizontalOptions="Fill">
                         <StackLayout HorizontalOptions="Fill">
                             <Label VerticalOptions="Center" HorizontalOptions="Start" Text="{Binding name}" TextColor="White"/>
                             <Switch HorizontalOptions="End"></Switch>

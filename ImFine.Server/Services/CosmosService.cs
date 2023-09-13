@@ -22,6 +22,22 @@ namespace ImFine.Server.Services
                 connectionString: configuration["COSMOS:ConnectionString"]
             );
         }
+
+        private string CleanStatus(string status)
+        {
+            if (status == "stop")
+            {
+                return "stopped";
+            }
+            else if (status == "start")
+            {
+                return "started";
+            }
+            else
+            {
+                return status;
+            }
+        }
         public async Task CreateGroupAsync(Group group)
         {
             await container.CreateItemAsync<Group>(group, new PartitionKey(group.owner));
@@ -55,7 +71,6 @@ namespace ImFine.Server.Services
                 FeedResponse<GroupReadDto> response = await groups.ReadNextAsync();
                 foreach (var item in response)
                 {
-                    //item.role = item.owner == username ? "owner" : "member";
                     groupReadDtos.Add(item);
                 }
             }

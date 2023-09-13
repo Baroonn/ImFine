@@ -9,11 +9,14 @@
     <Shell.TitleView>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Label Margin="0,15,0,0" FontAttributes="Bold" FontSize="20" Text="{Binding Name}" TextColor="White" HorizontalOptions="Start"/>
+            
             <Switch Grid.Column="1" HeightRequest="50" WidthRequest="100" HorizontalOptions="End" IsToggled="{Binding IsToggled, Mode=TwoWay}"></Switch>
+            <Button Grid.Column="2" WidthRequest="80" Text="Delete" Command="{Binding DeleteCommand}"/>
         </Grid>
     </Shell.TitleView>
     <RefreshView IsRefreshing="{Binding IsBusy}">

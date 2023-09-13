@@ -12,5 +12,6 @@ namespace ImFine.Client.Services
 
         public Task<bool> JoinGroup(string groupName);
         public Task<bool> LeaveGroup(string groupName);
+        public Task<bool> DeleteGroup(string name);
     }
 }
