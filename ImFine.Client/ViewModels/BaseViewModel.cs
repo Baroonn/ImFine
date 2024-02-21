@@ -162,10 +162,7 @@ namespace ImFine.Client.ViewModels
                 return status;
             }
 
-            //if (Permissions.ShouldShowRationale<Permissions.LocationWhenInUse>())
-            //{
-            //    // Prompt the user with additional information as to why the permission is needed
-            //}
+
             var accept = await Shell.Current.DisplayAlert("Info: ", "This app collects location data to enable you share you location with users in your groups even when the app is closed.", "OK", "Deny");
 
             if (!accept) return status;
@@ -180,11 +177,7 @@ namespace ImFine.Client.ViewModels
             try
             {
                 _isCheckingLocation = true;
-                var status = await CheckAndRequestLocationPermission();
-                if (status != PermissionStatus.Granted)
-                {
-                    return "None";
-                }
+
                 GeolocationRequest request = new(GeolocationAccuracy.High, TimeSpan.FromSeconds(10));
 
                 _cancelTokenSource = new CancellationTokenSource();

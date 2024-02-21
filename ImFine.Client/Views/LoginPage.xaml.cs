@@ -33,9 +33,7 @@ public partial class LoginPage : ContentPage
         {
             //Back to login
         }
-
     }
-
     protected override bool OnBackButtonPressed()
     {
         return true;

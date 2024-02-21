@@ -26,6 +26,12 @@ namespace ImFine.Server.Controllers
             return await _cosmosService.GetGroupsByUsernameAndMembers(User.Claims.FirstOrDefault(c => c.Type == claim)?.Value);
         }
 
+        [HttpGet("ping")]
+        public async Task<IActionResult> PingGroup()
+        {
+            return Ok();
+        }
+
         [HttpGet("search")]
         public async Task<IEnumerable<GroupSearchDto>> SearchGroups([FromQuery] string searchTerm)
         {

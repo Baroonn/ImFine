@@ -49,6 +49,8 @@ namespace ImFine.Client.ViewModels
             {
                 if (IsBusy) return;
                 IsBusy = true;
+                await CheckAndRequestLocationPermission();
+
                 bool foreground = false;
                 var groups = await GroupService.GetGroups();
 

@@ -17,10 +17,10 @@ public partial class LoadingPage : ContentPage
 
         if (accessToken != null)
         {
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
             httpClient.SetBearerToken(accessToken);
 
-            var response = await httpClient.GetAsync($"{baseUrl}/api/groups");
+            var response = await httpClient.GetAsync($"{baseUrl}/api/groups/ping");
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 SecureStorage.Default.RemoveAll();
